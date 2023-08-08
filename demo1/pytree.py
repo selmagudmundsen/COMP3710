@@ -1,9 +1,6 @@
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-from matplotlib import patches
-import numpy as np
-
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -42,22 +39,22 @@ def pythagorean_tree(start, angle, length, depth):
     pythagorean_tree(left_child_start, left_angle, child_length, depth-1)
     pythagorean_tree(right_child_start, right_angle, child_length, depth-1)
 
-if __name__ == '__main__':
-    # Set up the plot
-    plt.figure(figsize=(8, 8))
-    plt.axis('equal')
-    plt.axis('off')
 
-    # Starting position and initial angle
-    start_point = (0, 0)
-    initial_angle = torch.deg2rad(torch.tensor(90.0))
+# Set up the plot
+plt.figure(figsize=(8, 8))
+plt.axis('equal')
+plt.axis('off')
 
-    # Length of the initial branch and the depth of recursion
-    initial_length = 100
-    depth = 15
+# Starting position and initial angle
+start_point = (0, 0)
+initial_angle = torch.deg2rad(torch.tensor(90.0))
 
-    # Draw the Pythagorean tree fractal
-    pythagorean_tree(start_point, initial_angle, initial_length, depth)
+# Length of the initial branch and the depth of recursion
+initial_length = 100
+depth = 15
 
-    # Show the plot
-    plt.show()
+# Draw the Pythagorean tree fractal
+pythagorean_tree(start_point, initial_angle, initial_length, depth)
+
+ # Show the plot
+plt.show()
