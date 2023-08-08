@@ -19,8 +19,8 @@ def pythagorean_tree(start, angle, length, depth):
 
     # Calculate the coordinates for the two child branches
     child_length = length / torch.sqrt(torch.tensor(2.0))
-    left_angle = angle + torch.deg2rad(torch.tensor(45.0))
-    right_angle = angle - torch.deg2rad(torch.tensor(45.0))
+    left_angle = angle + torch.deg2rad(torch.tensor(30.0))
+    right_angle = angle - torch.deg2rad(torch.tensor(60.0))
 
     left_child_start = (end_x, end_y)
     right_child_start = (end_x, end_y)

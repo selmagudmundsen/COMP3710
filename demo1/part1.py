@@ -21,7 +21,7 @@ y = y.to(device)
 z = torch.exp(-(x**2 + y**2)/2.0)
 
 # 2D cosine and sine function
-zsine = torch.sin(x)
+zsine = torch.sin(x+2)
 zcosine = torch.cos(x)
 
 # multiply sine and Gaussian
