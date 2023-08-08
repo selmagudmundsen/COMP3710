@@ -11,11 +11,6 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def draw_line(start, end, color='black'):
     plt.plot([start[0], end[0]], [start[1], end[1]], color=color)
 
-def draw_rectangle(start, end, color='black'):
-    fig, ax = plt.subplots()
-    ax.plot([0, 10], [0, 10], color=color)
-    ax.add_patch(plt.Rectangle(start, end[0], end[1], fill=True, color=color))
-
 def pythagorean_tree(start, angle, length, depth):
     if depth == 0:
         return
