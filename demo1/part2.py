@@ -2,12 +2,12 @@ import torch
 import numpy as np
 
 # Use NumPy to create a 2D array of complex numbers on [-2,2]x[-2,2]
-Y, X = np.mgrid[0:0.1:0.0005, 0.3:0.4:0.0005] # zoomed in
+Y, X = np.mgrid[-1.3:1.3:0.005, -2:1:0.005] # zoomed in
 
 # load into PyTorch tensors
 x = torch.Tensor(X)
 y = torch.Tensor(Y)
-z = torch.complex(x, y) #important!
+z = torch.complex(x, y)*0.05 + (0.02 + 0.5j)
 zs = torch.zeros_like(z)
 ns = torch.zeros_like(z)
 
