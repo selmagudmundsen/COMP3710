@@ -123,4 +123,14 @@ class ResNet:
         # turns it into a linear layer
         out = self.linear(out)
         return out
+    
+def ResNet18():
+    return ResNet(BasicBlock, [2, 2, 2, 2])
 
+
+def ResNet34():
+    return ResNet(BasicBlock, [3, 4, 6, 3])
+
+
+model = ResNet18()
+model = model.to(device)
