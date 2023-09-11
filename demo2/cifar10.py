@@ -45,11 +45,13 @@ transform_test = transforms.Compose(
 
 trainset = torchvision.datasets.CIFAR10(
     root=path + "demo2/cifar10-batches-py", train=True, transform=transform_train, download=True
+    root=path + "COMP3710/cifar10-batches-py", train=True, transform=transform_train
 )
 train_loader = DataLoader(trainset, batch_size=128, shuffle=True)
 
 testset = torchvision.datasets.CIFAR10(
     root=path + "demo2/cifar10-batches-py", train=False, transform=transform_test, download=True
+    root=path + "COMP3710/cifar10-batches-py", train=False, transform=transform_train
 )
 test_loader = DataLoader(testset, batch_size=100, shuffle=False)
 
