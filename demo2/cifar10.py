@@ -42,12 +42,12 @@ tranform_test = transforms.Compose(
 )
 
 trainset = torchvision.datasets.CIFAR10(
-    root=path + "cifar10", train=True, transform=transform_train
+    root=path + "COMP3710/cifar10-batches-py", train=True, transform=transform_train
 )
 train_loader = torch.utils.DataLoader(trainset, batch_size=128, shuffle=True)
 
 testset = torchvision.datasets.CIFAR10(
-    root=path + "cifar10", train=False, transform=transform_train
+    root=path + "COMP3710/cifar10-batches-py", train=False, transform=transform_train
 )
 train_loader = torch.utils.DataLoader(testset, batch_size=100, shuffle=False)
 
