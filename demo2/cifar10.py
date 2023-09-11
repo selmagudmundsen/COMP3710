@@ -5,10 +5,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
-from torchvision.models.resnet import BasicBlock
-from torchvision.models.resnet import ResNet
 import torchvision.transforms as transforms
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
+import time
 
 # Device config
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,19 +22,21 @@ channels = 10
 
 # Path
 model_name = "resnet"
-path = "/Selma/dev/COMP3710/"
+path = "Selma/dev/COMP3710/COMP3710/"
 
 # Data
 transform_train = transforms.Compose(
     [
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        # tranforms.RandomHorizontalFlip(),
-        # transforms.RandomCrop(32, padding=4, padding_mode='reflect'),
+        # these two lines will improve the accuracy of the network
+        # these last two lines will increase the training data by flipping and cropping the images
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomCrop(32, padding=4, padding_mode='reflect'),
     ]
 )
 
-tranform_test = transforms.Compose(
+transform_test = transforms.Compose(
     [
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
@@ -42,14 +44,14 @@ tranform_test = transforms.Compose(
 )
 
 trainset = torchvision.datasets.CIFAR10(
-    root=path + "cifar10", train=True, transform=transform_train
+    root=path + "demo2/cifar10-batches-py", train=True, transform=transform_train, download=True
 )
-train_loader = torch.utils.DataLoader(trainset, batch_size=128, shuffle=True)
+train_loader = DataLoader(trainset, batch_size=128, shuffle=True)
 
 testset = torchvision.datasets.CIFAR10(
-    root=path + "cifar10", train=False, transform=transform_train
+    root=path + "demo2/cifar10-batches-py", train=False, transform=transform_test, download=True
 )
-train_loader = torch.utils.DataLoader(testset, batch_size=100, shuffle=False)
+test_loader = DataLoader(testset, batch_size=100, shuffle=False)
 
 # -----------
 # Model
@@ -59,25 +61,18 @@ class BasicBlock(nn.Module):
     def __init__(self, in_planes, planes, stride=1):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(
-            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
-        )
+            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = nn.Conv2d(
-            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False
-        )
-        self.bn2 = nn.BatchNorm2d(in_planes)
+            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != self.expansion * planes:
+        if stride != 1 or in_planes != (self.expansion*planes):
             self.shortcut = nn.Sequential(
-                nn.Conv2d(
-                    in_planes,
-                    self.expansion * planes,
-                    kernel_size=1,
-                    stride=stride,
-                    bias=False,
-                ),
-                nn.BatchNorm2d(self.expansion * planes),
+                nn.Conv2d(in_planes, self.expansion*planes, 
+                          kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(self.expansion*planes)
             )
 
     def forward(self, x):
@@ -87,20 +82,19 @@ class BasicBlock(nn.Module):
         out = F.relu(out)
         return out
     
-class ResNet:
+class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
         super(ResNet, self).__init__()
         self.in_planes = 64
 
-        # no downsampling here
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, 
+                               stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
-
         self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
         self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
-        self.linear(512 * block.expansion, num_classes)
+        self.linear = nn.Linear(512 * block.expansion, num_classes)
 
     # ties all the blocks together (almost identical to pytorch)
     def _make_layer(self, block, planes, num_blocks, stride):
@@ -134,3 +128,4 @@ def ResNet34():
 
 model = ResNet18()
 model = model.to(device)
+
