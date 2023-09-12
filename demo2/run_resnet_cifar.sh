@@ -7,7 +7,7 @@
 #SBATCH --mail-user=selma.gudmundsen@gmail.com
 #SBATCH -o test_out.txt
 #SBATCH -e test_err.txt
-#SBATCH --partition=vgpu
+#SBATCH --partition=test
 #SBATCH --gres=gpu:1
 
 conda activate env1
