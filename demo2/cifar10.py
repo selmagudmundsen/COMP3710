@@ -2,7 +2,6 @@
 """
 Classify the CIFAR10 dataset using ResNet
 """
-import numpy as np
 import torch
 import torch.nn as nn
 import torchvision
@@ -166,12 +165,10 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
-        scheduler.step()
-
         if (i+1) % 100 == 0:
             print("Epoch [{}/{}], Step [{}/{}] Loss: {:.5f}"
                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
-
+    scheduler.step()
 
 end = time.time()
 elapsed = end - start
