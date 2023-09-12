@@ -71,7 +71,7 @@ class BasicBlock(nn.Module):
             in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = nn.Conv2d(
-            in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+            planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
@@ -93,7 +93,6 @@ class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
         super(ResNet, self).__init__()
         self.in_planes = 64
-
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, 
                                stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
@@ -101,7 +100,7 @@ class ResNet(nn.Module):
         self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
-        self.linear = nn.Linear(512 * block.expansion, num_classes)
+        self.linear = nn.Linear(512*block.expansion, num_classes)
 
     # ties all the blocks together (almost identical to pytorch)
     def _make_layer(self, block, planes, num_blocks, stride):
@@ -145,7 +144,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, 
 
 # learning rate schedular (piecewise linear schedule)
 total_step = len(train_loader)
-scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=learning_rate, total_steps=total_step)
+scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=learning_rate, total_steps=total_step, epochs=num_epochs)
 
 #----------------
 # Train the model
@@ -167,11 +166,12 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
+        scheduler.step()
+
         if (i+1) % 100 == 0:
             print("Epoch [{}/{}], Step [{}/{}] Loss: {:.5f}"
                   .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
 
-        scheduler.step()
 
 end = time.time()
 elapsed = end - start
