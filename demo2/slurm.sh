@@ -10,6 +10,6 @@
 #SBATCH --partition=vgpu
 #SBATCH --gres=gpu:1
 
-conda activate pytorch
+conda activate env1
 
-python ~/test.py
+python test.py
