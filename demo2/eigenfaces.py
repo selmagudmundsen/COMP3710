@@ -74,7 +74,7 @@ def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
 plot_gallery(eigenfaces, eigenface_titles, h, w)
 
-# plt.show()
+plt.show()
 
 # Compactness plot to evaluate performance of the dimensionality reduction
 explained_variance = (S**2) / (n_samples - 1)
@@ -85,7 +85,7 @@ print(ratio_cumsum.shape)
 eigenvalueCount = torch.arange(n_components)
 plt.plot(eigenvalueCount, ratio_cumsum[:n_components])
 plt.title("Compactness")
-# plt.show()
+plt.show()
 
 # build random forest
 estimator = RandomForestClassifier(n_estimators=150, max_depth=15, max_features=150)
